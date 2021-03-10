@@ -9,7 +9,15 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.Set;
 
-public class MiniBrowser {
+/**
+ * 这个浏览器会模拟发送 Http 协议的请求，并且获取完整的 Http 响应，
+ * 通过这种方式，我们就可以更好的理解浏览器与服务器是如何通信，
+ * 在后面学习 Http 协议的时候，也更容易理解了。
+ * 为了模仿浏览器，不仅要获取 html 内容，
+ * 更重要的是要获取 Http 响应的头信息，
+ * 这样才能更好地理解 http 协议。
+ */
+public class MiniBrowser {//服务于http包
 
     public static void main(String[] args) throws Exception {
         String url = "http://static.how2j.cn/diytomcat.html";

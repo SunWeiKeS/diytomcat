@@ -1,15 +1,14 @@
-package com.sun.diytomcat;
+package com.sun.diytomcat.FileHistory.Bootstrap;
 
 import cn.hutool.core.util.NetUtil;
 import com.sun.diytomcat.http.Request;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
 
-public class Bootstrap {
+public class Bootstrap02 {
 
     public static void main(String[] args) {//访问 http://127.0.0.1:18080/
 
