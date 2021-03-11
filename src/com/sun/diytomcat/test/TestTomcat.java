@@ -1,11 +1,15 @@
 package com.sun.diytomcat.test;
 
+import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.util.NetUtil;
 import cn.hutool.core.util.StrUtil;
+import com.sun.diytomcat.util.Constant;
 import com.sun.diytomcat.util.MiniBrowser;
 import org.junit.Assert;
 import org.junit.BeforeClass;
 import org.junit.Test;
+
+import java.io.File;
 
 public class TestTomcat {
     private static int port=18080;
@@ -29,10 +33,28 @@ public class TestTomcat {
         Assert.assertEquals(html, "Hello DIY Tomcat from vicsun");
 
     }
+
+    @Test
+    public void testaHtml(){
+        String html= getContentString("/a.html");
+        Assert.assertEquals(html, "Hello DIY Tomcat from a.html");
+    }
+
+
     private String getContentString(String uri){
         String url = StrUtil.format("http://{}:{}{}", ip, port, uri);
         String content = MiniBrowser.getContentString(url);
         return content;
 
+    }
+
+    @Test
+    public void fileFound(){
+        String html= getContentString("/a.html");
+        String fileName = StrUtil.removePrefix(html, "/");
+        System.out.println(fileName);
+        File file = FileUtil.file(Constant.rootFolder);
+
+        System.out.println(file.toString());
     }
 }
