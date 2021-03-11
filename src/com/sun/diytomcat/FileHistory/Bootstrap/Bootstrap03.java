@@ -1,4 +1,4 @@
-package com.sun.diytomcat;
+package com.sun.diytomcat.FileHistory.Bootstrap;
 
 import cn.hutool.core.util.ArrayUtil;
 import cn.hutool.core.util.NetUtil;
@@ -8,13 +8,11 @@ import com.sun.diytomcat.http.Response;
 import com.sun.diytomcat.util.Constant;
 
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.Arrays;
 
-public class Bootstrap {
+public class Bootstrap03 {
 
     public static void main(String[] args) {//访问 http://127.0.0.1:18080/
 
@@ -36,15 +34,9 @@ public class Bootstrap {
                 System.out.println("uri:"+request.getUri());
 
                 Response response = new Response();
-                String uri = request.getUri();
-                if(null==uri)
-                    continue;
-                System.out.println(uri);
-                if("/".equals(uri)){
-                    String html=" "
-                }
-
-
+                String html="Hello DIY Tomcat from vicsun";
+                response.getWriter().println(html);
+                handle200(s,response);
 
             }
         } catch (IOException e) {

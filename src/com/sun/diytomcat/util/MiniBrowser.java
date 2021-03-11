@@ -92,7 +92,7 @@ public class MiniBrowser {//服务于http包
             requestHeaders.put("Host", u.getHost()+":"+port);
             requestHeaders.put("Accept", "text/html");
             requestHeaders.put("Connection", "close");
-            requestHeaders.put("User-Agent", "how2j mini brower / java1.8");
+            requestHeaders.put("User-Agent", "Vics' mini brower / java1.8");
 
             if(gzip)
                 requestHeaders.put("Accept-Encoding", "gzip");
