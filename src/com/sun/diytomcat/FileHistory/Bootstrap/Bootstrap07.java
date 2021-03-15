@@ -1,13 +1,11 @@
-package com.sun.diytomcat;
+package com.sun.diytomcat.FileHistory.Bootstrap;
 
 import cn.hutool.core.io.FileUtil;
 import cn.hutool.core.thread.ThreadUtil;
 import cn.hutool.core.util.ArrayUtil;
-import cn.hutool.core.util.NetUtil;
 import cn.hutool.core.util.StrUtil;
 import cn.hutool.log.LogFactory;
 import cn.hutool.system.SystemUtil;
-import com.sun.diytomcat.catalina.Context;
 import com.sun.diytomcat.http.Request;
 import com.sun.diytomcat.http.Response;
 import com.sun.diytomcat.util.Constant;
@@ -15,22 +13,19 @@ import com.sun.diytomcat.util.ThreadPoolUtil;
 
 import java.io.File;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.OutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.*;
+import java.util.LinkedHashMap;
+import java.util.Map;
+import java.util.Set;
 
-public class Bootstrap {
-
-    //声明一个 contextMap 用于存放路径和Context 的映射。
-    public static HashMap<String, Context> contextMap = new HashMap<>();
+public class Bootstrap07 {
 
     public static void main(String[] args) {//访问 http://127.0.0.1:18080/
 
         try {
             logJVM();//像 tomcat 那样 一开始打印 jvm 信息
-            scanContextsOnWebAppsFolder();
             int port = 18080;//表示本服务的使用端口号
 
             //在端口上启动ServerSocket服务，浏览器和服务端通过socket进行通信
@@ -52,15 +47,12 @@ public class Bootstrap {
                             if (null == uri)//首先判断 uri 是否为空，如果为空就不处理了。
                                 return;
                             System.out.println(uri);
-                            Context context = request.getContext();
                             if ("/".equals(uri)) {//如果是 "/", 那么依然返回原字符串。
                                 String html = "Hello DIY Tomcat from vicsun";
                                 response.getWriter().println(html);
                             } else {//接着处理文件，首先取出文件名，比如访问的是 /a.html, 那么文件名就是 a.html
                                 String fileName = StrUtil.removePrefix(uri, "/");
-                                //File file = FileUtil.file(Constant.rootFolder, fileName);//然后获取对应的文件对象 file
-                                File file = FileUtil.file(context.getDocBase(), fileName);//然后获取对应的文件对象 file
-
+                                File file = FileUtil.file(Constant.rootFolder, fileName);//然后获取对应的文件对象 file
                                 if (file.exists()) {//如果文件存在，那么获取内容并通过 response.getWriter 打印。
                                     String fileContent = FileUtil.readUtf8String(file);
                                     response.getWriter().println(fileContent);
@@ -87,33 +79,6 @@ public class Bootstrap {
         }
 
     }
-
-    /**
-     * 创建 scanContextsOnWebAppsFolder 方法，
-     * 用于扫描 webapps 文件夹下的目录，
-     * 对这些目录调用 loadContext 进行加载。
-     */
-    private static void scanContextsOnWebAppsFolder() {
-        File[] folders = Constant.webappsFolder.listFiles();
-        for (File folder : folders) {
-            if (!folder.isDirectory())
-                continue;
-            loadContext(folder);
-        }
-    }
-    private static void loadContext(File folder){
-        String path = folder.getName();
-        if("ROOT".equals(path))
-            path="/";
-        else
-            path="/"+path;
-
-        String docBase = folder.getAbsolutePath();
-        Context context = new Context(path, docBase);
-        contextMap.put(context.getPath(), context);
-
-    }
-
 
     private static void logJVM() {
         /**
