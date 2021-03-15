@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <Server>
-     <Context path="/b" docBase="d:/project/diytomcat/b" />
+     <Context path="/b" docBase="D:/Programs/Workspaces/IDEA/Study-project/diytomcat/b" />
 </Server>

@@ -11,6 +11,7 @@ import com.sun.diytomcat.catalina.Context;
 import com.sun.diytomcat.http.Request;
 import com.sun.diytomcat.http.Response;
 import com.sun.diytomcat.util.Constant;
+import com.sun.diytomcat.util.ServerXMLUtil;
 import com.sun.diytomcat.util.ThreadPoolUtil;
 
 import java.io.File;
@@ -30,7 +31,9 @@ public class Bootstrap {
 
         try {
             logJVM();//像 tomcat 那样 一开始打印 jvm 信息
+
             scanContextsOnWebAppsFolder();
+            scanContextsInServerXML();
             int port = 18080;//表示本服务的使用端口号
 
             //在端口上启动ServerSocket服务，浏览器和服务端通过socket进行通信
@@ -88,12 +91,19 @@ public class Bootstrap {
 
     }
 
-    /**
-     * 创建 scanContextsOnWebAppsFolder 方法，
-     * 用于扫描 webapps 文件夹下的目录，
-     * 对这些目录调用 loadContext 进行加载。
-     */
+    private static void scanContextsInServerXML(){
+        List<Context> contexts = ServerXMLUtil.getContexts();
+        for (Context context : contexts) {
+            contextMap.put(context.getPath(), context);
+        }
+    }
+
     private static void scanContextsOnWebAppsFolder() {
+        /**
+         * 创建 scanContextsOnWebAppsFolder 方法，
+         * 用于扫描 webapps 文件夹下的目录，
+         * 对这些目录调用 loadContext 进行加载。
+         */
         File[] folders = Constant.webappsFolder.listFiles();
         for (File folder : folders) {
             if (!folder.isDirectory())
@@ -113,8 +123,6 @@ public class Bootstrap {
         contextMap.put(context.getPath(), context);
 
     }
-
-
     private static void logJVM() {
         /**
          * 这里获取日志对象的方式是 LogFactory.get() ，
@@ -138,7 +146,6 @@ public class Bootstrap {
             LogFactory.get().info(key + ":\t\t" + infos.get(key));//可自适应不同类的变化
         }
     }
-
     private static void handle200(Socket s, Response response) throws IOException {
         String contentType = response.getContentType();
         String headText = Constant.response_head_202;
